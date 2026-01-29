@@ -12,11 +12,19 @@
 #include <vector>
 
 #include "asio2/udp/udp_client.hpp"
+#include "asio2/udp/udp_server.hpp"
+#include "asio2/tcp/tcp_client.hpp"
 
 namespace vofasender {
+    /**
+    * @brief UDP Client for Vofa
+    * @details 用于向Vofa发送数据的UDP客户端
+    * @param[in] $remote_ip 为Vofa主机远程IP地址
+    * @param[in] $remote_port 为Vofa主机远程端口号
+    */
     class UDP_Client {
     public:
-        UDP_Client(std::string_view remote_ip = "0.0.0.0", std::string_view remote_port = "8035") {
+        UDP_Client(std::string_view remote_ip = "0.0.0.0", std::string_view remote_port = "1347") {
             client_.start(remote_ip, remote_port);
         }
 
@@ -56,8 +64,11 @@ namespace vofasender {
     };
 
     class UDP_Server {
-        UDP_Server(){};
-        UDP_Server(std::string_view vofa_ip, std::string_view vofa_port) {}
+        UDP_Server() {
+        };
+
+        UDP_Server(std::string_view vofa_ip = "0.0.0.0", std::string_view vofa_port = "1346") {
+        }
     };
 }
 
