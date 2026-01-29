@@ -8,8 +8,6 @@
 #pragma once
 
 #include <cstdint>
-#include <cstring>
-#include <vector>
 
 #include "asio2/udp/udp_client.hpp"
 #include "asio2/udp/udp_server.hpp"
@@ -37,30 +35,17 @@ namespace vofasender {
         void send(Args... args) {
             static_assert(sizeof...(args) > 0, "At least one value!");
 
-            buffer_.clear();
-            buffer_.reserve(sizeof...(args) * 4 + 4);
+            std::array<float, sizeof...(Args) + 1> buf{static_cast<float>(args)..., tail.f};
 
-            ([this](auto value)
-            {
-                static_assert(std::is_arithmetic<decltype(value)>::value, "Vofa only supports arithmetic types");
-
-                float v = static_cast<float>(value);
-                uint8_t raw[4];
-                std::memcpy(raw, &v, 4);
-                buffer_.insert(buffer_.end(), raw, raw + 4);
-            }(args), ...);
-
-            buffer_.push_back(0x00);
-            buffer_.push_back(0x00);
-            buffer_.push_back(0x80);
-            buffer_.push_back(0x7F);
-
-            client_.async_send(buffer_);
+            client_.async_send(reinterpret_cast<uint8_t*>(buf.data()), buf.size() * sizeof(float));
         }
 
     private:
+        union {
+            uint8_t ch[4] = {0x00, 0x00, 0x80, 0x7F};
+            float f;
+        } tail;
         asio2::udp_client client_;
-        std::vector<uint8_t> buffer_;
     };
 
     class UDP_Server {
