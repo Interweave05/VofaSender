@@ -83,8 +83,10 @@ namespace vofasender {
     class TCP_Client {
     public:
         explicit TCP_Client(std::string_view remote_ip = "0.0.0.0", std::string_view remote_port = "1347") {
+            std::cerr << "Warning: TCP_Client is not recommended for general use!" << std::endl;
+            std::cerr << "Warning: TCP_Client 不推荐使用!" << std::endl;
             client_.start(remote_ip, remote_port);
-            client_.set_auto_reconnect(true, std::chrono::milliseconds(2000));
+            client_.set_auto_reconnect(true, std::chrono::milliseconds(200));
         };
 
         ~TCP_Client() {
@@ -95,7 +97,6 @@ namespace vofasender {
         template <typename... Args>
         void send(Args... args) {
             static_assert(sizeof...(args) > 0, "At least one value!");
-
             std::array<float, sizeof...(Args) + 1> buf{static_cast<float>(args)..., tail.f};
             if (client_.is_started())
             {

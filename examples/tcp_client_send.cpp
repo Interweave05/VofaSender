@@ -7,6 +7,7 @@
 #include "VofaSender.hpp"
 
 [[noreturn]] int main() {
+    // 不推荐使用本TCP框架连接vofa，会有异常的卡顿问题
     std::cout << "使用之前请将remote_ip设置为vofa所在电脑的ip，并确认端口是否配置正确" << std::endl;
     vofasender::TCP_Client vofa("192.168.75.1", "1347");
     float i = 0;
