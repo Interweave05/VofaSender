@@ -9,3 +9,7 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 add_executable(udp_client_send
         examples/udp_client_send.cpp
 )
+
+add_executable(tcp_client_send
+        examples/tcp_client_send.cpp
+)
